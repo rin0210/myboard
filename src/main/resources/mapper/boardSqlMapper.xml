@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- sqlSessionFactory -->
+<mapper namespace="com.my.mapper.BoardDAO">
+	<!-- resultMap : 리턴타입을 정의하기 위함(이를 사용하지 않고 resultType을 사용해도 됨) -->
+	<!-- column 에는 DB의 필드명을 적고 property에는 DTO 프라퍼티명을 적어준다. -->
+	<resultMap type="com.my.DTO.BoardDTO" id="resultList">
+		<result property="no" column="no" />
+		<result property="id" column="id"></result>
+		<result property="name" column="name"></result>
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+	</resultMap>
+
+	<!-- MapperDAO 인터페이스의 메서드명이랑 id=""이거랑 같아야함, mapping 되기 때문에 -->
+
+	<select id="selectAll" resultMap="resultList">
+		select * from board_s
+	</select>
+
+	<insert id="insertBoard" parameterType="com.my.DTO.BoardDTO"
+		useGeneratedKeys="true" keyProperty="no">
+		<selectKey keyProperty="no" resultType="int" order="BEFORE">
+			select board_s_seq.nextval from dual
+		</selectKey>
+		insert into board_s (no, id, name, title, content)
+		values (#{no},#{id},#{name},#{title},#{content})
+	</insert>
+
+	<insert id="insertFile" parameterType="hashMap">
+		insert into img_file
+		(f_no, b_no, org_name, stored_name, f_size)
+		values
+		(img_file_seq.nextval, #{b_no}, #{org_name}, #{stored_name},#{f_size}
+		)
+	</insert>
+
+	<select id="selectImg" resultType="com.my.DTO.ImgFileDTO">
+		select * from img_file
+	</select>
+
+	<select id="selectOne" resultType="com.my.DTO.BoardDTO">
+		select * from board_s where no
+		= #{no}
+	</select>
+
+	<select id="selectImgOne" resultType="com.my.DTO.ImgFileDTO">
+		select * from
+		img_file where b_no = #{no}
+	</select>
+
+	<delete id="deleteBoard" parameterType="int">
+		delete from board_s where
+		no = #{no}
+	</delete>
+
+	<update id="modifyBoard" parameterType="com.my.DTO.BoardDTO">
+		update board_s set title=#{title}, content=#{content} where no = #{no}
+	</update>
+	
+	<update id="modifyImg" parameterType="hashMap">
+		update img_file set org_name=#{org_name}, stored_name =#{stored_name}, f_size =#{f_size} where f_no = #{mod_f_no}
+	</update>
+
+
+</mapper>
+	

@@ -1,0 +1,4 @@
+이미지 파일 업로드->출력 시 경로 문제 발생
+프로젝트 외부에 파일 업로드를 할 경우 보안상의 이유로 가져오지 못함(웹에서 로컬 폴더로 접근 불가) 따라서 server.xml에 파일 업로드 context를 등록해줌 
+<Context docBase="C:/img/user-img/" path="/img/user-img" reloadable="true"/>
+C:/img/user-img/ 폴더를  /img/user-img 라는 URL로 접근하겠다는 의미임
